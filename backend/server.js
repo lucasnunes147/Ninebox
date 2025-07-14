@@ -461,10 +461,12 @@ app.post('/competenciaPoridAvaliacao', (req, res) => {
 
 //Adicione uma nova rota para salvar as respostas:
 app.post('/salvarResposta', (req, res) => {
-  const { idAvaliacao, cpf, competencias } = req.body;
+  let { idAvaliacao, cpf, competencias } = req.body;
 
-  if (!idAvaliacao || !cpf || !Array.isArray(competencias)) {
-    return res.status(400).json({ message: 'Dados incompletos.' });
+  // Converte e valida idAvaliacao
+  idAvaliacao = parseInt(idAvaliacao, 10);
+  if (isNaN(idAvaliacao) || !cpf || !Array.isArray(competencias)) {
+    return res.status(400).json({ message: 'Dados incompletos ou inválidos.' });
   }
 
   const cleanCpf = cpf.replace(/[^\d]/g, '');
@@ -497,7 +499,10 @@ app.post('/salvarResposta', (req, res) => {
     `;
 
     db.execute(checkQuery, [idAvaliacao, cleanCpf], (err, results) => {
-      if (err) return res.status(500).json({ message: 'Erro ao verificar resposta existente.' });
+      if (err) {
+        console.error('Erro ao verificar resposta existente:', err);
+        return res.status(500).json({ message: 'Erro ao verificar resposta existente.' });
+      }
 
       if (results[0].total > 0) {
         return res.status(400).json({ message: 'Esta avaliação já foi respondida por este CPF.' });
@@ -505,10 +510,20 @@ app.post('/salvarResposta', (req, res) => {
 
       // Inicia a transação para salvar as respostas
       db.beginTransaction(err => {
-        if (err) return res.status(500).json({ message: 'Erro na transação inicial.' });
+        if (err) {
+          console.error('Erro na transação inicial:', err);
+          return res.status(500).json({ message: 'Erro na transação inicial.' });
+        }
 
         const insertPromises = competencias.map(comp => {
           return new Promise((resolve, reject) => {
+            const valor = parseFloat(comp.valor);
+            if (isNaN(valor)) {
+              return reject(new Error(`Valor inválido para a competência ${comp.idCompetencia}`));
+            }
+
+            const dataResposta = comp.dataResposta ? new Date(comp.dataResposta) : new Date();
+
             const query = `
               INSERT INTO respostas_avaliacao (
                 id_avaliacao,
@@ -524,13 +539,18 @@ app.post('/salvarResposta', (req, res) => {
               idAvaliacao,
               cleanCpf,
               comp.idCompetencia,
-              comp.valor,
+              valor,
               comp.observacoes || '',
-              comp.dataResposta || new Date()
+              dataResposta
             ];
 
+            console.log('Tentando inserir:', values);
+
             db.execute(query, values, (err, result) => {
-              if (err) return reject(err);
+              if (err) {
+                console.error('Erro ao inserir:', values, err);
+                return reject(err);
+              }
               resolve(result);
             });
           });
@@ -540,6 +560,7 @@ app.post('/salvarResposta', (req, res) => {
           .then(() => {
             db.commit(err => {
               if (err) {
+                console.error('Erro ao finalizar transação:', err);
                 return db.rollback(() => {
                   res.status(500).json({ message: 'Erro ao finalizar transação.' });
                 });
