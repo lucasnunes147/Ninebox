@@ -424,7 +424,7 @@ app.post('/competenciaPoridAvaliacao', (req, res) => {
   const query = `
     SELECT competencias FROM avaliacoes
     WHERE id = ?
-`;
+  `;
 
   db.execute(query, [idAvaliacao], (err, results) => {
     if (err) {
@@ -432,21 +432,32 @@ app.post('/competenciaPoridAvaliacao', (req, res) => {
       return res.status(500).json({ message: 'Erro ao buscar as competencias.' });
     }
 
-    console.log('Resultados encontrados:', results);
-
     if (results.length === 0) {
       return res.status(404).json({ message: 'Competências não encontradas para esse Id.' });
     }
 
+    const competenciasRaw = results[0].competencias;
+
+    console.log('Tipo de competencias:', typeof competenciasRaw);
+    console.log('Valor de competencias:', competenciasRaw);
+
     try {
-      const competencias = JSON.parse(results[0].competencias);
+      const competencias = typeof competenciasRaw === 'string'
+        ? JSON.parse(competenciasRaw)
+        : competenciasRaw;
+
       return res.status(200).json({ competencias });
     } catch (e) {
-      console.error('Erro ao interpretar competências:', e);
-      return res.status(500).json({ message: 'Erro ao interpretar competências.' });
+      console.error('Erro ao interpretar competências:', e.message);
+      return res.status(500).json({
+        message: 'Erro ao interpretar competências.',
+        erro: e.message,
+        valor: competenciasRaw
+      });
     }
   });
 });
+
 
 //Adicione uma nova rota para salvar as respostas:
 app.post('/salvarResposta', (req, res) => {
