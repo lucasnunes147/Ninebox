@@ -1,0 +1,151 @@
+/*Geral, se aplica a todas as páginas*/
+
+/*Todas as páginas*/
+body {
+  background-color: #f4f7fc;
+}
+
+/*Todas, o código do navbar está separado do código geral da avaliação para facilitar a manuntenção*/
+/*-----------------inicio do código css do navbar-----------------------------------*/
+.navbar{
+background-color: #1a237e;
+}
+
+.header-avaliacao{
+  color: aliceblue;
+  font-size: 30px;
+}
+
+/*-----------------fim do código css do navbar-------------------------------------*/
+
+/*card de todas as páginas*/
+.card {
+  width: 50rem;
+  border-radius: 20px;
+  padding: 30px;
+  background-color: white;
+}
+
+#titulo-card{
+  color: #1a237e;
+}
+
+/*Todas*/
+
+/*estilo dos botões da página*/
+
+.btn-proximo{
+  background-color: #1a237e;
+  color: white;
+  text-decoration: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.btn-voltar {  
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  border-color:#1a237e;
+  color: #1a237e;
+}
+
+.btn-voltar:hover {  
+  background-color: #1a237e;
+  color: white;
+}
+
+
+
+/*--------------------Pagina 2-----------------------------------------------------------*/
+
+/*Esse código é para o menu suspenso que mostra os avaliados pesquisados na pagina 2*/
+#suggestions {
+margin-top: 0px;
+border: 1px solid #ddd;
+border-radius: 4px;
+max-height: 300px;
+overflow-y: auto;
+}
+
+.list-group-item {
+border: none;
+border-bottom: 1px solid #ddd;
+transition: background-color 0.2s ease-in-out;
+}
+
+.list-group-item:hover {
+background-color: #f8f9fa;
+}
+
+/*Configurações de estilo da tabela da pagina 2*/
+
+th.tituloTabela{
+    background-color: #1a237e !important;
+    color: white !important;
+    font-family: inherit; /* Usa a mesma fonte do Bootstrap */
+    font-size: inherit; /* Mantém o tamanho do texto */
+    font-weight: normal; /* Remove o negrito forçado */
+
+}
+
+.table td, .table th {
+  text-align: center;
+}
+.table-primary th {
+  font-weight: normal !important;
+  color: white !important;
+  background-color: #00008B !important;
+}
+
+.tabela-icone {
+  width: 30px; 
+  height: 30px; 
+}
+
+.table-buttons {
+  text-align: center; /* Centraliza o texto do cabeçalho */
+}
+
+/*botão para criar novo, utilizado nas paginas do formulário e também na criação de nova competencia / avaliado*/
+#criar-novo {
+  background-color: #1a237e;
+  color: white;
+  text-decoration: none;
+  padding: 12px 21px ;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+#criar-novo:hover{
+  background-color: #0b5ed7;
+  color: white;
+}
+
+/*-----------------------Pagina 4 estilo ----------------------------*/
+
+.btn-finalizar {
+   background-color: #1a237e;
+  color: white;
+  text-decoration: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* ----------------------nova competencia estilo --------------------*/
+
+    .competency-section p {
+      border-radius: 8px;
+    }
+
+    .competency-section textarea {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      padding: 10px;
+      resize: none;
+    }
+

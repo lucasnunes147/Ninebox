@@ -1,0 +1,96 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    margin: 0; 
+    padding: 0; 
+  }
+  
+  .navbar-custom {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    margin: 0;    
+    font-family: Arial, sans-serif;
+    margin-bottom: 150px;
+  }
+  .navbar-custom h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    text-align: left;
+    
+  }
+  .login-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 70px 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    
+  }
+  .login-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .login-header h1 {
+    font-size: 1.5rem;
+    color: #1a237e;
+  }
+  .login-header .bi {
+    font-size: 3rem;
+    color: #1a237e;
+  }
+  .form-check-inline {
+    display: flex;
+    justify-content: center;
+  }
+  .btn-login {
+    background-color: #1a237e;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px; 
+    display: block; 
+    margin: 20px auto; 
+    text-align: center; 
+    border: none;
+    width: 150px;
+    height: 70px;
+    font-size: 18px;
+  }
+
+  .btn-login:hover {
+    background-color: #0d153a;
+  }
+
+  .form-label {
+    margin-top: 30px;
+    font-size: 18px;
+    display: block;
+    text-align: center; 
+  }
+  
+  .form-control {
+    display: block;
+    margin: 10px auto; 
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+  }
+  .form-control{
+    width: 300px;
+    height: 50px;
+  }
+.form-label{
+  font-size: 18px;
+}
+.form-control{
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.login-container{
+  font-size: 10px;
+}

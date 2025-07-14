@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orientações</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .container {
+      width: 50%;
+      max-width: 800px;
+      padding: 20px;
+    }
+    .container-btn {
+      display: flex;
+      justify-content: center;
+      gap: 80%;
+    }
+    .content-box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #000000;
+      margin-top: 10%;
+      margin-bottom: 25%;
+    }
+    .btn-custom {
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .btn-comecar {
+      background-color: #1a237e;
+      color: white;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #1a237e;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <h2 class="titulo" style="color: aliceblue; font-size: 30px;">Orientações:</h2>
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="content-box" style="max-width: 1000px; max-height: 500px;">
+      
+    </div>
+
+    <div class="container-btn text-center mt-4">
+      <button type="button" class="btn btn-primary" id="responderCompetencias" style="width: 150px; height: 80px; font-size: 20px">
+        Começar
+      </button>
+    </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const idAvaliacao= localStorage.getItem('idAvaliacao');
+      
+      if (!idAvaliacao) {
+        alert('Erro, Avaliação não encontrada.');
+        window.location.href = 'login.usuario.html';
+        return;
+      }
+
+      // Buscar descrição com base no idAvaliacao
+      $.ajax({
+        url: 'http://localhost:3000/descricaoPoridAvaliacao',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ idAvaliacao: idAvaliacao }),
+        success: function (response) {
+          const descricaoElement = document.createElement('p');
+          descricaoElement.textContent = response.descricao;
+          document.querySelector('.content-box').appendChild(descricaoElement);
+        },
+        error: function (xhr) {
+          console.error('Erro ao buscar descrição:', xhr.responseJSON?.message || xhr.statusText);
+        }
+      });
+
+      
+
+      // Confirmação de início
+      document.getElementById('responderCompetencias').addEventListener('click', function () {
+        window.location.href = "avaliacao_conteudo.html";
+      });
+      
+    });
+  </script>
+</body>
+</html>

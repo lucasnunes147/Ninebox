@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avaliação de Competências</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .content-box {
+      display: grid;
+      justify-items: center;
+    }
+
+    .container_avaliacao {
+      border: 1px solid #000;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 1rem;
+    }
+
+    #txt_colored {
+      color: rgb(3, 92, 194);
+      font-size: 1.3rem;
+    }
+
+    .radio-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .radio-group-title {
+      flex: 1;
+      text-align: left;
+    }
+
+    .radio-group-input {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      position: relative;
+    }
+
+    .radio-group-input .input-with-border {
+      display: flex;
+      align-items: center;
+      border-left: 2px solid #000;
+      /* Linha vertical */
+      padding-left: 10px;
+      /* Espaçamento entre a linha e o input */
+    }
+
+    .radio-group-input label {
+      display: flex;
+      align-items: center;
+      margin: 0;
+    }
+
+    .radio-group-input input[type="radio"] {
+      margin-right: 5px;
+      /* Espaço entre o número e o input */
+    }
+
+    .observacoes-div textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 0.5rem;
+    }
+
+    .container-btn {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+    }
+
+    .btn-voltar {
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      border-color: #1a237e;
+      color: #1a237e;
+    }
+
+    .btn-voltar:hover {
+      background-color: #1a237e;
+      color: white;
+    }
+
+    .btn-proximo {
+      background-color: #1a237e;
+      color: white;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .btn-secondary {
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      border-color: #1a237e;
+      color: #1a237e;
+      background-color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #1a237e;
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: #1a237e;
+      color: white;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .page-number {
+      margin: 0 5px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .page-number.active {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .observacoes-div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border: none;
+    }
+
+    .observacoes-div textarea {
+      width: 100%;
+      max-width: 500px;
+      height: 100px;
+      border: 1px solid #ccc;
+      border-color: none;
+      padding: 0.5rem;
+      box-sizing: border-box;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .competencia-titulo {
+      color: #1a237e;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!--Header-->
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #1a237e;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <h2 style="color: #fff; margin: 10px;">Avaliação de Competências</h2>
+      </a>
+    </div>
+  </nav>
+
+  <!--Container que mostra a competencia selecionada-->
+  <div class="container">
+    <p id="txt_colored" class="text-center mb-4"></p>
+    <div id="competencias-container" class="content-box">
+      <!--Aqui fica o título da competencia, gerado pelo javascript renderCompetencias()-->
+    </div>
+
+    <div class="container-btn mb-5">
+      <a href="#" class="btn btn-voltar" id="btn-voltar">Voltar</a>
+      <div class="pagination-container" id="pagination-container"></div>
+      <button class="btn btn-proximo" id="btn-proximo">Próximo</button>
+    </div>
+  </div>
+
+  <!-- Modal de Finalização -->
+  <div class="modal" tabindex="-1" id="finalizarModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Finalizar Avaliação</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Você está prestes a finalizar sua avaliação. Deseja continuar?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="confirmar-finalizar">Sim, Finalizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    //Variáveis globais
+    //Armazena as competencias consultadas via API
+    let competencias = [];
+    //Cria o objeto respostas_avaliacao no local storage
+    const localStorageKey = 'respostas_avaliacao';
+    const itemsPerPage = 1;
+    //Armazena o número da página e associa a competencia
+    let currentPage = 0;
+    //Essa variável é diferente da const respostas presente no renderCompetencia e salvar no local storage
+    let respostas = JSON.parse(localStorage.getItem(localStorageKey)) || {};
+
+    //------------------------------------Bloco para salvar a resposta e as observações no local storage------------------------------------------------------------
+    //A função abaixo adapta o respostas_avaliacao para receber o valor e a observação em formato JSON
+    //aqui troquei a const respostas por respostasTemp, pois ela estava dando conflito com a variável global
+    function saveResposta(idCompetencia, valor) {
+      const respostasTemp = JSON.parse(localStorage.getItem('respostas_avaliacao')) || {};
+      const observacaoExistente = respostas[idCompetencia]?.observacao || '';
+
+      respostasTemp[idCompetencia] = {
+        valor,
+        observacao: observacaoExistente
+      };
+
+      respostas = respostasTemp;
+      localStorage.setItem('respostas_avaliacao', JSON.stringify(respostas));
+    }
+
+    //Essa função roda quando o usuário digita observações no campo de observação, para guardar o valor no local storage
+    function saveObservacao(idCompetencia) {
+      const respostasTemp = JSON.parse(localStorage.getItem('respostas_avaliacao')) || {};
+      const valorExistente = respostas[idCompetencia]?.valor || '';
+
+      const textarea = document.getElementById(`observacao_${idCompetencia}`);
+      const texto = textarea.value;
+
+      respostasTemp[idCompetencia] = {
+        valor: valorExistente,
+        observacao: texto
+      };
+      respostas = respostasTemp;
+      localStorage.setItem('respostas_avaliacao', JSON.stringify(respostas));
+    }
+    //As duas funções existem para evitar que o valor armazenado anteriormente no local storage se perca ao alterar alguma das informações
+
+    //Aqui é a parte que carrega as competencias via API no banco
+    async function loadCompetencias(idAvaliacao) {
+      try {
+        const response = await fetch('http://localhost:3000/competenciaPoridAvaliacao', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idAvaliacao })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro ${response.status}: ${errorText}`);
+        }
+
+        //Se der certo, ele chama a função renderCompetencias
+        const data = await response.json();
+        if (data.competencias && Array.isArray(data.competencias)) {
+          competencias = data.competencias;
+          renderCompetencias();
+        } else {
+          console.error('Competências não encontradas ou inválidas.');
+        }
+      } catch (error) {
+        console.error('Erro ao carregar competências:', error);
+      }
+    }
+
+    //---------------------------------------------A função renderCompetencias recebeu os seguintes ajustes:----------------------------------------------------------
+    //Armazena o idCompetencia em uma const para associar a resposta ao id da competencia
+    //Associa cada tópico da competencia (ideal, bom, mediano e a_melhoar) com os seus respectivos valores, permitindo que o usuário selecione apenas um valor
+    //Chama a função saveRespostas e saveObservação ao passar de página (evento onchange) e aproveita para armazenar o valor do idCompetencia com o valor da resposta do usuário no local storage
+    function renderCompetencias() {
+      const container = document.getElementById('competencias-container');
+      container.innerHTML = '';
+
+      const startIndex = currentPage * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, competencias.length);
+      const currentCompetencias = competencias.slice(startIndex, endIndex);
+
+      currentCompetencias.forEach((competencia) => {
+        const idCompetencia = competencia.id;
+        const respostas = JSON.parse(localStorage.getItem('respostas_avaliacao')) || {};
+        const observacao = respostas[idCompetencia]?.observacao || "";
+
+        const tituloDiv = document.createElement('div');
+        tituloDiv.className = 'competencia-titulo';
+        tituloDiv.innerHTML = `<h4 style="text-align: center; margin-bottom: 1rem;">${competencia.competencia}</h4>`;
+        container.appendChild(tituloDiv);
+
+        const div = document.createElement('div');
+        div.className = 'container_avaliacao';
+
+        const radioChecked = (valor) => respostas[idCompetencia]?.valor == valor ? 'checked' : '';
+
+        const categorias = [
+          { titulo: competencia.ideal, valores: [4.9, 4.5, 4.1] },
+          { titulo: competencia.bom, valores: [3.9, 3.5, 3.1] },
+          { titulo: competencia.mediano, valores: [2.9, 2.5, 2.1] },
+          { titulo: competencia.a_melhorar, valores: [1.9, 1.5, 1.1] }
+        ];
+
+        div.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+        <p><strong>${competencia.descricao}</strong></p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+        ${categorias.map(({ titulo, valores }, index) => `
+          <div class="radio-group">
+            <div class="radio-group-title">${titulo}</div>
+            <div class="radio-group-input">
+              ${valores.map(valor => `
+                <div class="input-with-border">
+                  <label style="margin: 0;">
+                    <input type="radio" name="competencia_${idCompetencia}" value="${valor}" ${radioChecked(valor)}
+                    onchange="saveResposta(${idCompetencia}, ${valor})"> ${valor}
+                  </label>
+                </div>
+              `).join('')}
+            </div>
+          </div>          
+          ${index !== categorias.length - 1 ? '<div style="border-bottom: 2px solid #000; width: 100%; margin-top: 1rem;"></div>' : ''}
+        `).join('')}
+      </div>
+      <div class="container-observacoes">
+        <div class="observacoes-div">
+          <textarea
+              id="observacao_${idCompetencia}" placeholder="Observações..." onchange="saveObservacao(${idCompetencia})">${observacao}</textarea>
+        </div>
+      </div>             
+    `;
+
+        container.appendChild(div);
+      });
+
+      renderPagination();
+    }
+
+    //Função que renderiza as competencias em paginação, evitando a necessidade de se criar uma página para cada competencia
+    function renderPagination() {
+      const totalPages = Math.ceil(competencias.length / itemsPerPage);
+      const paginationContainer = document.getElementById('pagination-container');
+      paginationContainer.innerHTML = '';
+      for (let i = 0; i < totalPages; i++) {
+        const pageNumber = document.createElement('span');
+        pageNumber.className = `page-number ${i === currentPage ? 'active' : ''}`;
+        pageNumber.innerText = i + 1;
+        pageNumber.addEventListener('click', () => {
+          currentPage = i;
+          renderCompetencias();
+        });
+        paginationContainer.appendChild(pageNumber);
+      }
+    }
+
+    //Ajustada a função de botão para próxima página para que ela passe para a próxima competencia caso não seja a ultima página. Caso seja, chama o modal de finalização.
+    document.getElementById('btn-proximo').addEventListener('click', async () => {
+      const totalPages = Math.ceil(competencias.length / itemsPerPage);
+
+      if (currentPage < totalPages - 1) {
+        // Apenas avança para a próxima página sem enviar resposta
+        currentPage++;
+        renderCompetencias();
+      } else {
+        // Está na última página, verifica se todas as respostas foram preenchidas antes de enviar
+        if (verificaSeTodasRespondidas()) {
+          $('#finalizarModal').modal('show');
+        } else {
+          alert('Por favor, preencha todas as competências antes de finalizar.');
+        }
+      }
+    });
+
+    //---------------------------------------------Requisição para API enviar ao banco de dados---------------------------------------------------------------------
+    // Implementacao para responder as competencias e enviar para o banco
+    document.getElementById('confirmar-finalizar').addEventListener('click', async () => {
+        const idAvaliacao = localStorage.getItem('idAvaliacao');
+        const cpf = localStorage.getItem('cpf') || '';
+        const dataResposta = new Date().toISOString();
+
+        const respostas = JSON.parse(localStorage.getItem('respostas_avaliacao')) || {};
+
+        // Converte o objeto de respostas em um array formatado
+        const competencias = Object.keys(respostas).map(id => ({
+          idCompetencia: parseInt(id),
+          valor: respostas[id]?.valor || '',
+          observacoes: respostas[id]?.observacao || '',
+          dataResposta
+        }));
+
+        // Monta o corpo da requisição
+        const payload = {
+          idAvaliacao,
+          cpf,
+          competencias
+        };
+
+        try {
+          const response = await fetch('http://localhost:3000/salvarResposta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            console.log('Respostas enviadas com sucesso!');
+            localStorage.removeItem('respostas_avaliacao');
+            localStorage.removeItem('idAvaliacao');
+            window.location.href = "avaliacao_agradecimentos.html";
+          } else {
+            const errorData = await response.json();
+            alert('Erro ao enviar respostas: ' + (errorData.message || 'Erro desconhecido'));
+          }
+        } catch (err) {
+          console.error('Erro na requisição:', err);
+          alert('Falha na conexão com o servidor.');
+        }
+      });
+
+      function verificaSeTodasRespondidas() {
+        console.log(respostas);
+        return competencias.every((_, index) => respostas[competencias[index].id]?.valor);
+      }
+
+      //Botão voltar configurado para navegar entre as páginas. Caso a página seja igual a 0 ele volta para a tela de orientações
+      document.querySelector('.btn-voltar').addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          renderCompetencias();
+        } else {
+          window.location.href = "avaliacao_orientacoes.html";
+        }
+      });
+
+      const idAvaliacao = localStorage.getItem('idAvaliacao');
+      loadCompetencias(idAvaliacao);
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

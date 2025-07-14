@@ -1,0 +1,52 @@
+body {
+    background-color: #f4f7fc;
+  }
+
+  .navbar {
+    background-color: #1a237e;
+    padding: 1rem;
+  }
+
+  .navbar h2 {
+    color: #fff;
+    font-size: 30px;
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: 30px;
+    background-color: white;
+  }
+
+  .btn {
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    background-color: #111136;
+  }
+
+  .btn-primary:hover {
+    background-color: #05057d;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 50px;
+  }
+
+  .btn-voltar {
+    position: absolute;
+    left: 40px;
+    bottom: 15px;
+  }
+
+  .btn-proximo {
+    position: absolute;
+    right: 40px;
+    bottom: 15px;
+  }

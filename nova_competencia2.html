@@ -1,0 +1,264 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="CSS/nova_avaliacao.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <title>Nova Competência</title>
+</head>
+
+<body>
+
+  <!--Navbar da competencia, exclusiva desta página pois o título da página é único-->
+  <nav class="navbar navbar-expand-lg navbar-light p-0 m-0">
+    <div class="container-fluid p-0">
+      <a class="navbar-brand" href="menu.html">
+        <h2 class="header-novo-avaliado m-2 ps-1" style="color:aliceblue">Nova Competencia
+        </h2>
+      </a>
+      <!--logout-->
+      <div class="dropdown ms-auto">
+        <a href="#" class="d-flex align-items-center text-decoration-none" id="profileDropdown"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="ImagensMenu/perfil.png" alt="Logo" width="50" height="50" class="d-flex align-text-top"
+            style="margin-right: 30px;">
+
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+          <li><a class="dropdown-item" href="#" id="logout">Sair</a></li>
+        </ul>
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="card shadow-lg mx-auto" style="width: 70%;">
+      <div class="card-body">
+        <h4 class="text-center mb-5" id="titulo-card">Defina os critérios da competência:</h4>
+        <form id="formCompetencia">
+
+          <div class="competency-section mb-2">
+            <h5 class="ps-4" id="titulo-card">4,1 / 4,5 / 4,9 - Ideal</h5>
+            <p class="p-4"><textarea placeholder="Digite aqui..." required></textarea></p>
+          </div>
+
+          <div class="competency-section mb-2">
+            <h5 class="ps-4" id="titulo-card">3,1 / 3,5 / 3,9 - Bom</h5>
+            <p class="p-4"><textarea placeholder="Digite aqui..." required></textarea></p>
+          </div>
+
+          <div class="competency-section mb-2">
+            <h5 class="ps-4" id="titulo-card">2,1 / 2,5 / 2,9 - Mediano</h5>
+            <p class="p-4"><textarea placeholder="Digite aqui..." required></textarea></p>
+          </div>
+
+          <div class="competency-section mb-3">
+            <h5 class="ps-4" id="titulo-card">1,1 / 1,5 / 1,9 - A melhorar</h5>
+            <p class="p-4"><textarea placeholder="Digite aqui..." required></textarea></p>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4 ps-4 pe-4">
+            <button type="button" onclick="onclick=window.location='nova_competencia.html'"
+              class="btn btn-outline-primary btn-voltar" id="btn-voltar">Voltar</button></a>
+            <button type="submit" class="btn btn-primary" id="criar-novo">Criar Competência</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmação / Esse modal serve para confirmar se o usuário quer salvar a competencia -->
+  <div class="modal" id="modalConfirmacao" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titulo-card">Deseja salvar a nova competencia?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Verifique se todas as informações estão corretas antes de salvar a competência</p>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-custom btn-voltar" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-proximo" id="confirmarEnvio" data-bs-dismiss="modal">Criar
+            Competência</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Sucesso / Esse modal serve para informar que a competencia foi salva com sucesso -->
+  <div class="modal" id="modalSucesso" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titulo-card">Competencia salva com sucesso!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Agora pode adiciona-la a sua avaliação</p>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" onclick="onclick=window.location = 'nova_avaliacao3.html'"
+            class="btn btn-outline-custom btn-voltar" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de erro do servidor / Esse modal serve para informar que houve um problema no servidor para salvar a competencia -->
+  <div class="modal" id="modalErro" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titulo-card">Erro ao tentar salvar a competencia</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="msgModalErro"></p>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-outline-custom btn-voltar" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      // Recuperar os dados do localStorage
+      var competencia = localStorage.getItem('competencia') || '';
+      var descricaoCompetencia = localStorage.getItem('descricaoCompetencia') || '';
+
+      // Preencher os campos automaticamente
+      $(".competency-section").eq(0).find("textarea").val(localStorage.getItem('ideal') || '');
+      $(".competency-section").eq(1).find("textarea").val(localStorage.getItem('bom') || '');
+      $(".competency-section").eq(2).find("textarea").val(localStorage.getItem('mediano') || '');
+      $(".competency-section").eq(3).find("textarea").val(localStorage.getItem('a_melhorar') || '');
+
+      // Evento para salvar no localStorage conforme o usuário digita
+      $(".competency-section").eq(0).find("textarea").on("input", function () {
+        localStorage.setItem('ideal', $(this).val());
+      });
+
+      $(".competency-section").eq(1).find("textarea").on("input", function () {
+        localStorage.setItem('bom', $(this).val());
+      });
+
+      $(".competency-section").eq(2).find("textarea").on("input", function () {
+        localStorage.setItem('mediano', $(this).val());
+      });
+
+      $(".competency-section").eq(3).find("textarea").on("input", function () {
+        localStorage.setItem('a_melhorar', $(this).val());
+      });
+    });
+
+    // Evento para capturar e salvar os dados no servidor
+
+    // Aguarde até que o DOM esteja completamente carregado
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // Captura o formulário
+      const form = document.getElementById('formCompetencia');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Impede o envio automático do formulário
+
+        //Aqui efetuamos a validação dos campos. Caso o usuário não tenha preenchido os dois campos, ele não pode prosseguir para a próxima página
+        if (!form.checkValidity()) {
+          form.classList.add("was-validated"); // Ativa as mensagens de erro do Bootstrap
+          return; // Se houver erro, interrompe o envio
+        }
+
+        // Se não houver erro, abre o modal e aguarda a confirmação do usuário
+        const modalElement = document.getElementById("modalConfirmacao");
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
+
+        // Busca o botão "Sim" dentro do modal (garanta que o id esteja correto no HTML)
+        const btnSim = modalElement.querySelector("#confirmarEnvio");
+        if (!btnSim) {
+          console.error("O botão 'confirmarEnvio' não foi encontrado no modal!");
+          return;
+        }
+
+        // Cria uma promise que resolve somente quando o usuário clicar em "Sim"
+        const usuarioConfirmou = await new Promise((resolve) => {
+          btnSim.addEventListener("click", () => {
+            resolve(true);
+          }, { once: true });
+        });
+
+        // Se o usuário confirmou, esconde o modal e continua
+        if (usuarioConfirmou) {
+          modalInstance.hide();
+        } else {
+          // Se por algum motivo o usuário não confirmar, interrompe o envio
+          return;
+        }
+
+        // Capturar os valores preenchidos
+        var competencia = localStorage.getItem('competencia') || '';
+        var descricaoCompetencia = localStorage.getItem('descricaoCompetencia') || '';
+        var ideal = $(".competency-section").eq(0).find("textarea").val();
+        var bom = $(".competency-section").eq(1).find("textarea").val();
+        var mediano = $(".competency-section").eq(2).find("textarea").val();
+        var a_melhorar = $(".competency-section").eq(3).find("textarea").val();
+
+        // Enviar para o servidor
+        $.ajax({
+          url: "http://localhost:3000/salvar_competencia",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            competencia: competencia,
+            descricao: descricaoCompetencia,
+            ideal: ideal,
+            bom: bom,
+            mediano: mediano,
+            a_melhorar: a_melhorar
+          }),
+          success: function (response) {
+            const modalElement = document.getElementById("modalSucesso");
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+
+            // Limpa o localStorage após envio bem-sucedido
+            localStorage.removeItem("competencia");
+            localStorage.removeItem("descricaoCompetencia");
+            localStorage.removeItem("ideal");
+            localStorage.removeItem("bom");
+            localStorage.removeItem("mediano");
+            localStorage.removeItem("a_melhorar");
+
+          },
+
+          error: function (xhr, status, error) {
+            const msgModalErro = document.getElementById('msgModalErro');
+
+            // Define o conteúdo correto do parágrafo
+            msgModalErro.innerHTML = `<p>Mensagem de erro:  ${error} </p>`;
+
+            const modalElement = document.getElementById("modalErro");
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+            
+            console.error(error);
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>

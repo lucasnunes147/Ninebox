@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Automação NineBox</title>
+  <link rel="stylesheet" href="CSS/login.usuario.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function validateForm(event) {
+      event.preventDefault();
+      var cpf = $('#cpf').val().replace(/\D/g, ''); // Remove caracteres não numéricos
+
+      if (!cpf || cpf.length !== 11) {
+        alert("Digite um CPF válido com 11 dígitos.");
+        return;
+      }
+
+      $.ajax({
+        url: 'http://localhost:3000/loginusuario',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ cpf: cpf }),
+        success: function (response) {
+          if (response.avaliacoesEncontradas && response.avaliacoesEncontradas.length > 0) {
+            // Armazena CPF
+            localStorage.setItem('cpf', cpf);
+
+            window.location.href = 'avaliacao_lista.html';
+          } else {
+            alert("Nenhuma avaliação encontrada para este CPF.");
+          }
+        }
+        ,
+        error: function (xhr) {
+          alert("Erro: " + (xhr.responseJSON ? xhr.responseJSON.message : "Erro desconhecido."));
+        }
+      });
+    }
+
+
+    // Formata o CPF enquanto o usuário digita
+    $(document).ready(function () {
+      $('#cpf').on('input', function () {
+        var cpf = $(this).val().replace(/\D/g, '');
+
+        if (cpf.length > 11) {
+          cpf = cpf.substring(0, 11);
+        }
+
+        // Aplica a máscara: 000.000.000-00
+        if (cpf.length > 9) {
+          cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        } else if (cpf.length > 6) {
+          cpf = cpf.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
+        } else if (cpf.length > 3) {
+          cpf = cpf.replace(/(\d{3})(\d{1,3})/, "$1.$2");
+        }
+
+        $(this).val(cpf);
+      });
+
+    });
+
+  </script>
+</head>
+
+<body>
+  <div class="navbar-custom">
+    <h1>Automação NineBox</h1>
+  </div>
+
+  <div class="container">
+    <div class="login-container">
+      <div class="login-header">
+        <h1 class="bemvindo">Seja Bem-vindo(a)!</h1>
+      </div>
+      <form onsubmit="validateForm(event)">
+        <div class="mb-3">
+          <br>
+          <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Digite o seu CPF" required
+            pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Formato: 000.000.000-00" maxlength="14">
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-login btn-block">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+<footer style="justify-content: center; text-align: center;">
+  © Todos os direitos reservados
+</footer>
+
+</html>
