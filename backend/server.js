@@ -13,9 +13,9 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../')));
 
 const db = mysql.createConnection({
-  host: process.env.MYSQLHOST || 'localhost',
+  host: process.env.MYSQLHOST || 'switchback.proxy.rlwy.net',
   user: process.env.MYSQLUSER || 'root',
-  password: process.env.MYSQLPASSWORD || '',
+  password: process.env.MYSQLPASSWORD || 'YwxkXgjnIuMoAOAbMEdoCapKIDVIHAEJ',
   database: process.env.MYSQLDATABASE || 'ninebox',
   port: process.env.MYSQLPORT || 3306,
 });
