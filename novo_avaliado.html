@@ -217,7 +217,7 @@
       const data = obterDadosFormulario(form);
 
       const method = id ? "PUT" : "POST";
-      const url = id ? `http://localhost:3000/avaliado/${id}` : "http://localhost:3000/avaliado";
+      const url = id ? `ninebox-production.up.railway.app/avaliado/${id}` : "ninebox-production.up.railway.app/avaliado";
 
       await enviarDados(url, method, data);
     });

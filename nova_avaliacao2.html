@@ -68,7 +68,7 @@
     //nova função carregarAvaliados, puxando cpf
     function carregarAvaliados() {
       console.log("Função carregarAvaliados chamada");
-      fetch("http://localhost:3000/avaliado")
+      fetch("https://ninebox-production.up.railway.app/avaliado")
         .then((response) => {
           if (!response.ok) {
             throw new Error("Erro na resposta do servidor");

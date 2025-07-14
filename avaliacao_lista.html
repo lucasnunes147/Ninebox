@@ -196,7 +196,7 @@
 
             // Buscar avaliacao com base no CPF
             $.ajax({
-                url: 'http://localhost:3000/listarAvaliacoes',
+                url: 'https://ninebox-production.up.railway.app/listarAvaliacoes',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ cpf: cpf }),
