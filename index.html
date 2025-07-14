@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Automação NineBox</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/estilo1.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function validateForm(event) {
+      event.preventDefault();
+
+      var email = $('#email').val();
+      var password = $('#password').val();
+      var accessType = $('input[name="accessType"]:checked').val();
+
+      if (!email || !password || !accessType) {
+        alert("Preencha todos os campos: Email/CPF, Senha e Tipo de Acesso.");
+        return;
+      }
+
+      $.ajax({
+        url: 'https://ninebox-production.up.railway.app/login',
+        type: 'POST',
+        data: JSON.stringify({
+          email: email,
+          password: password,
+          accessType: accessType
+        }),
+        contentType: 'application/json',
+        success: function (response) {
+          if (response.message === 'Login bem-sucedido') {
+            if (response.tipo === 'admin') {
+
+              window.location.href = 'menu.html';
+            } else if (response.tipo === 'usuario') {
+
+              window.location.href = 'userMenu.html';
+            }
+          } else {
+            alert(response.message);
+          }
+        },
+        error: function (xhr) {
+          alert(xhr.responseJSON.message || "Erro ao processar o login.");
+        }
+      });
+    }
+    function mostrarRecuperacao() {
+      document.getElementById('recuperacao-container').style.display = 'block';
+    }
+
+    function recuperarSenha() {
+      var email = document.getElementById('recuperacao-email').value;
+
+      if (!email) {
+        alert('Digite seu e-mail!');
+        return;
+      }
+
+      fetch('https://ninebox-production.up.railway.app/esqueci-senha', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(error => console.error('Erro ao recuperar senha:', error));
+    }
+  </script>
+</head>
+
+<body>
+
+  <div class="navbar-custom pt-3 pb-3" style="margin-bottom: 170px; background-color: #1a237e; color: white;">
+    <h2 class="ps-4 m-0" style="color:white">Automação NineBox</h2>
+  </div>
+
+
+  <div class="container-fluid d-flex justify-content-center">
+    <div class="login-container pt-4 pb-4 pe-5 ps-5">
+      <img src="ImagensMenu/icon1.png" alt="Usuario" class="user-image">
+      <div class="login-header d-flex justify-content-center mb-2 mt-5 pt-0" style='color: #1a237e'>
+        <h3>Seja Bem-vindo(a)!</h3>
+      </div>
+
+      <form id="loginForm" onsubmit="validateForm(event)">
+        <div class="text-center">
+          <label for="accessType" class="form-label mt-1">Escolha o tipo de acesso:</label>
+          <hr class="mt-2 mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-4 ps-5 pe-5">
+          
+            <div class="d-flex justify-content-center" style="flex: 1;">
+              <input class="form-check-input" type="radio" name="accessType" id="admin" value="admin">
+              <label class="form-check-label mx-2" for="admin">Administrador</label>
+            </div>
+            
+            <div class="d-flex justify-content-center" style="flex: 1;">
+              <input class="form-check-input" type="radio" name="accessType" id="user" value="usuario" onclick="onclick=window.location = 'login.usuario.html'">
+              <label class="form-check-label mx-2" for="user" >Usuário</label>
+            </div>
+
+          </div>
+        </div>
+
+
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email / CPF</label>
+          <input type="text" class="form-control" id="email" name="email" placeholder="Digite o seu e-mail ou CPF"
+            required>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="********" required>
+        </div>
+
+        <div class="forgot-password mb-3 d-flex-justify-content-start">
+          <a href="#" onclick="mostrarRecuperacao()">Esqueci a senha</a>
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-login d-flex-justify-content-start pt-2 pb-2 ps-3 pe-3">Login</button>
+        </div>
+      </form>
+      <div id="recuperacao-container" style="display: none; margin-top: 20px;">
+        <label for="recuperacao-email">Digite seu e-mail:</label>
+        <input type="email" id="recuperacao-email" class="form-control" placeholder="exemplo@email.com">
+        <button class="btn btn-primary mt-2" onclick="recuperarSenha()"
+          style="background-color:#00008B; border: none;">Enviar código de recuperação</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<footer class="mt-4">
+  © Todos os direitos reservados
+</footer>
+
+</html>

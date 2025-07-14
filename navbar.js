@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     document.getElementById('confirmLogout').addEventListener('click', function () {
                         localStorage.removeItem('token');
-                        window.location.href = "login.html";
+                        window.location.href = "index.html";
                     });
                 } else {
                     console.error("Erro: Elementos do logout não encontrados.");
