@@ -24,13 +24,8 @@ const db = mysql.createPool({
 });
 
 
-db.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar no banco de dados: ', err);
-    return;
-  }
-  console.log('Conectado ao banco de dados');
-});
+console.log('Pool de conexões MySQL criado com sucesso!');
+
 
 // Rota de login
 app.post('/login', (req, res) => {
