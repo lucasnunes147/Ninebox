@@ -12,15 +12,12 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../')));
 
-const db = mysql.createPool({
+const db = mysql.createConnection({
   host: process.env.MYSQLHOST || 'switchback.proxy.rlwy.net',
   user: process.env.MYSQLUSER || 'root',
   password: process.env.MYSQLPASSWORD || 'YwxkXgjnIuMoAOAbMEdoCapKIDVIHAEJ',
   database: process.env.MYSQLDATABASE || 'ninebox',
   port: process.env.MYSQLPORT || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
 });
 
 db.connect((err) => {
