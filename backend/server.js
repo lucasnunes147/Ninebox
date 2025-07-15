@@ -12,24 +12,22 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../')));
 
-const db = mysql.createPool({
+const db = mysql.createConnection({
   host: process.env.MYSQLHOST || 'switchback.proxy.rlwy.net',
   user: process.env.MYSQLUSER || 'root',
   password: process.env.MYSQLPASSWORD || 'YwxkXgjnIuMoAOAbMEdoCapKIDVIHAEJ',
   database: process.env.MYSQLDATABASE || 'ninebox',
   port: process.env.MYSQLPORT || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
 });
 
-db.query('SELECT 1', (err) => {
+db.connect((err) => {
   if (err) {
-    console.error('Erro ao testar conexão com o banco:', err);
-  } else {
-    console.log('Conexão com o banco de dados bem-sucedida!');
+    console.error('Erro ao conectar no banco de dados: ', err);
+    return;
   }
+  console.log('Conectado ao banco de dados');
 });
+
 // Rota de login
 app.post('/login', (req, res) => {
   const { email, password, accessType } = req.body;
