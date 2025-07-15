@@ -23,10 +23,13 @@ const db = mysql.createPool({
   queueLimit: 0
 });
 
-
-console.log('Pool de conexões MySQL criado com sucesso!');
-
-
+db.query('SELECT 1', (err) => {
+  if (err) {
+    console.error('Erro ao testar conexão com o banco:', err);
+  } else {
+    console.log('Conexão com o banco de dados bem-sucedida!');
+  }
+});
 // Rota de login
 app.post('/login', (req, res) => {
   const { email, password, accessType } = req.body;
