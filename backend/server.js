@@ -578,6 +578,23 @@ app.post('/salvarResposta', (req, res) => {
     });
   });
 });
+app.get('/avaliacao/:id/texto-final', (req, res) => {
+    const id = req.params.id;
+    const query = 'SELECT textoFinal FROM avaliacoes WHERE id = ?';
+
+    connection.query(query, [id], (error, results) => {
+        if (error) {
+            console.error('Erro ao buscar textoFinal:', error);
+            return res.status(500).json({ error: 'Erro no servidor' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Avaliação não encontrada' });
+        }
+
+        res.json({ textoFinal: results[0].textoFinal });
+    });
+});
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
