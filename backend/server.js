@@ -579,22 +579,26 @@ app.post('/salvarResposta', (req, res) => {
   });
 });
 app.get('/avaliacao/:id/texto-final', (req, res) => {
-    const id = req.params.id;
-    const query = 'SELECT textoFinal FROM avaliacoes WHERE id = ?';
+  const id = req.params.id;
 
-    connection.query(query, [id], (error, results) => {
-        if (error) {
-            console.error('Erro ao buscar textoFinal:', error);
-            return res.status(500).json({ error: 'Erro no servidor' });
-        }
+  const sql = 'SELECT textoFinal FROM avaliacoes WHERE id = ?';
+  connection.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error('Erro no banco:', err);
+      return res.status(500).json({ error: 'Erro interno do servidor' });
+    }
 
-        if (results.length === 0) {
-            return res.status(404).json({ message: 'Avaliação não encontrada' });
-        }
+    if (!results.length) {
+      return res.status(404).json({ message: 'Avaliação não encontrada' });
+    }
 
-        res.json({ textoFinal: results[0].textoFinal });
-    });
+    // textoFinal pode ser null, trate para string vazia se quiser
+    const textoFinal = results[0].textoFinal || "Nenhum texto final cadastrado para essa avaliação.";
+
+    res.json({ textoFinal });
+  });
 });
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
