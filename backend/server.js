@@ -578,7 +578,33 @@ app.post('/salvarResposta', (req, res) => {
     });
   });
 });
+app.get('/avaliacoes', (req, res) => {
+  const sql = `
+    SELECT 
+      nomeAvaliacao, 
+      empresa, 
+      dataInicio, 
+      dataFim
+    FROM avaliacoes
+  `;
 
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar avaliações:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
+
+    const hoje = new Date();
+
+    const dados = results.map(row => {
+      const dataFim = new Date(row.dataFim);
+      const status = dataFim >= hoje ? 'Em andamento' : 'Encerrada';
+      return { ...row, status };
+    });
+
+    res.json(dados);
+  });
+});
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
