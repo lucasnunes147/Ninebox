@@ -578,9 +578,11 @@ app.post('/salvarResposta', (req, res) => {
     });
   });
 });
+// rota para efetuar o filtro nas avalicoes 
 app.get('/avaliacoes', (req, res) => {
   const sql = `
     SELECT 
+      id,
       nomeAvaliacao, 
       empresa, 
       dataInicio, 
@@ -605,6 +607,71 @@ app.get('/avaliacoes', (req, res) => {
     res.json(dados);
   });
 });
+
+// Rota para consultar as informações da avaliação selecionada para o dashboard (adaptei do código feito para consultar competências).
+app.post('/dashboardPoridAvaliacao', (req, res) => {
+  const { idAvaliacao } = req.body;
+
+  if (!idAvaliacao) {
+    return res.status(400).json({ message: 'idAvaliacao não encontrado' });
+  }
+
+  console.log('Buscando Avaliação...:', idAvaliacao);
+
+  const query = `
+    SELECT nomeAvaliacao, empresa, dataInicio, dataFim, avaliados FROM avaliacoes
+    WHERE id = ?
+`;
+
+  db.execute(query, [idAvaliacao], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar informações da avaliação', err);
+      return res.status(500).json({ message: 'Erro ao buscar as informações da avaliação.' });
+    }
+
+    console.log('Resultados encontrados:', results);
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Nenhuma informação encontrada para essa avaliação.' });
+    }
+
+    const resultado = results[0];
+
+    // Como os avaliados estão juntos em JSON, utilizamos um let e um JSON.parse para tratar os dados, separando em objetos a parte. Depois conseguimos contar quantos avaliados são listados usando um length
+    let listaAvaliados = [];
+    try {
+      listaAvaliados = JSON.parse(resultado.avaliados);
+    } catch (err) {
+      console.error('Erro ao interpretar avaliados:', err);
+      return res.status(500).json({ message: 'Erro ao interpretar lista de avaliados.' });
+    }
+
+    // Aqui você pode escolher os parâmetros para montar o objeto depois. Por exemplo, se quisermos pegar o gestor posteriormente, é só adicionar essa informação aqui
+    const dadosAvaliados = listaAvaliados.map(avaliado => ({
+      nome: avaliado.nome,
+      cpf: avaliado.cpf
+    }));
+
+    // Usamos o length para contar quantos avaliados tem na avaliação, e armazenamos essa informação na const quantidade
+    const quantidade = listaAvaliados.length;
+
+    // Monta resposta final
+    const informacoes = {
+      nomeAvaliacao: resultado.nomeAvaliacao,
+      empresa: resultado.empresa,
+      dataInicio: resultado.dataInicio,
+      dataFim: resultado.dataFim,
+      quantidadeAvaliados: quantidade,
+      avaliados: dadosAvaliados
+    };
+
+    // dando tudo certo, retornamos as informações para tratá-las no front.
+    return res.status(200).json({ informacoes });
+
+  });
+});
+
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
